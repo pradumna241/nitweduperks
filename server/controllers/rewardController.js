@@ -37,11 +37,17 @@ exports.getStudentRewards = async (req, res) => {
 exports.submitRewardRequest = async (req, res) => {
   try {
     const { requestedPoints } = req.body;
+
+    // With memory storage, multer stores file data in req.file.buffer.
+    // Upload this buffer to a cloud storage service (e.g. Cloudinary, AWS S3)
+    // and save the returned URL/path in your database instead of req.file.path.
+    // Example:
+    // const uploadedResult = await uploadToCloud(req.file.buffer, req.file.originalname);
+    // const documentUrl = uploadedResult.secure_url || uploadedResult.Location;
     
-    // Document path will be set by multer middleware
     const newRequest = new RewardRequest({
       student: req.user.id,
-      documentPath: req.file.path,
+      documentPath: req.file.originalname, // replace with cloud URL when saved
       requestedPoints: requestedPoints || 0
     });
     

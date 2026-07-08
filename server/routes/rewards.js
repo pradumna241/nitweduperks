@@ -6,15 +6,8 @@ const auth = require('../middleware/auth');
 const admin = require('../middleware/admin');
 const rewardController = require('../controllers/rewardController');
 
-// Configure multer storage for file uploads
-const storage = multer.diskStorage({
-  destination: function(req, file, cb) {
-    cb(null, 'uploads/');
-  },
-  filename: function(req, file, cb) {
-    cb(null, `${Date.now()}-${file.originalname}`);
-  }
-});
+// Use memory storage on Vercel / serverless environments
+const storage = multer.memoryStorage();
 
 // File filter for allowed file types
 const fileFilter = (req, file, cb) => {
@@ -29,8 +22,8 @@ const fileFilter = (req, file, cb) => {
 };
 
 const upload = multer({ 
-  storage: storage,
-  fileFilter: fileFilter,
+  storage,
+  fileFilter,
   limits: { fileSize: 5 * 1024 * 1024 } // 5MB limit
 });
 
