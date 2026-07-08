@@ -1,72 +1,43 @@
 # Student Reward Management System
 
-A MERN stack application for managing student rewards and certificates.
+Simple MERN app for student rewards and admin approval.
 
-## Project Structure
+## Run locally
 
-```
-student-reward-system/
-├── client/             # React frontend
-├── server/             # Express backend
-│   ├── config/         # DB and middleware configuration
-│   ├── controllers/    # Route logic
-│   ├── middleware/     # Auth and error handlers
-│   ├── models/         # Mongoose schemas
-│   ├── routes/         # API routes
-│   └── uploads/        # Folder for uploaded certificates (JPG/PDF)
+Backend:
+```bash
+cd server
+npm install
+npm start
 ```
 
-## Getting Started
+Frontend:
+```bash
+cd client
+npm install
+npm start
+```
 
-### Backend Setup
+## Deployment notes
 
-1. Navigate to the server directory:
-   ```
-   cd server
-   ```
+- Frontend uses `REACT_APP_API_URL` for the API base URL.
+- Backend requires `MONGO_URI`, `JWT_SECRET`, and email config env vars.
+- Use an SMTP app password for Gmail login instead of your normal account password.
+- Example env vars:
+  - `EMAIL_USER=your@gmail.com`
+  - `EMAIL_APP_PASSWORD=your-app-password`
+  - `EMAIL_HOST=smtp.gmail.com`
+  - `EMAIL_PORT=465`
+  - `EMAIL_SECURE=true`
+- Vercel does not allow writing local files, so uploads should use memory storage and cloud storage instead.
 
-2. Install dependencies:
-   ```
-   npm install
-   ```
+## Project layout
 
-3. Start the development server:
-   ```
-   npm run dev
-   ```
+- `client/` - React frontend
+- `server/` - Express backend
+- `server/routes/` - API routes
+- `server/controllers/` - Route handlers
+- `server/models/` - Database schemas
+- `server/utils/` - Helpers like email sender
 
-The server will run on http://localhost:5000
-
-### Frontend Setup
-
-1. Navigate to the client directory:
-   ```
-   cd client
-   ```
-
-2. Install dependencies:
-   ```
-   npm install
-   ```
-
-3. Start the development server:
-   ```
-   npm start
-   ```
-
-The client will run on http://localhost:3000
-
-## Email (SendGrid) configuration
-
-Render blocks SMTP ports; this project uses an HTTP email API. Configure SendGrid (or another HTTP email provider) via environment variables in your hosting platform.
-
-Required env vars (server):
-
-- `SENDGRID_API_KEY` - API key for SendGrid (leave unset to log emails to server console in development).
-- `EMAIL_FROM` - The email address to use as the sender (e.g. `no-reply@yourdomain.com`).
-- `JWT_SECRET` - Secret used to sign JWT tokens.
-
-Notes:
-- The server uses the SendGrid v3 HTTP API at `https://api.sendgrid.com/v3/mail/send`. If `SENDGRID_API_KEY` is not set, OTP emails are printed to server logs for local development.
-- You can adapt `server/utils/emailSender.js` to support other HTTP providers (Mailgun, SparkPost, SES API, etc.).
  
