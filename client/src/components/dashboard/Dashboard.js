@@ -14,7 +14,8 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/auth/user');
+        const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+        const res = await axios.get(`${apiUrl}/auth/user`);
         setUser(res.data);
         setLoading(false);
       } catch (err) {

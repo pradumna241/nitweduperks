@@ -57,7 +57,7 @@ const RequestHistory = () => {
               <td>{new Date(request.createdAt).toLocaleDateString()}</td>
               <td>
                 <a 
-                  href={`http://localhost:5000/${request.documentPath}`} 
+                  href={`${process.env.REACT_APP_API_URL ? process.env.REACT_APP_API_URL.replace(/\/api$/, '') : 'http://localhost:5000'}/${request.documentPath}`} 
                   target="_blank" 
                   rel="noopener noreferrer"
                 >

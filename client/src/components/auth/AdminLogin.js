@@ -25,7 +25,8 @@ const AdminLogin = () => {
     setError('');
     
     try {
-      const res = await axios.post('/api/auth/admin/login', formData);
+      const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+      const res = await axios.post(`${apiUrl}/auth/admin/login`, formData);
       
       // Save token to localStorage
       localStorage.setItem('token', res.data.token);

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { getPendingRequests, reviewRequest } from '../../services/rewardService';
 
+const API_HOST = process.env.REACT_APP_API_URL ? process.env.REACT_APP_API_URL.replace(/\/api$/, '') : 'http://localhost:5000';
+
 const PendingRequests = () => {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -74,7 +76,7 @@ const PendingRequests = () => {
   };
 
   const renderDocumentPreview = (request) => {
-    const docPath = `http://localhost:5000/${request.documentPath}`;
+    const docPath = `${API_HOST}/${request.documentPath}`;
     const extension = getDocumentExtension(request.documentPath);
     
     if (['jpg', 'jpeg', 'png'].includes(extension)) {
@@ -176,7 +178,7 @@ const PendingRequests = () => {
                 Preview Document
               </button>{' '}
               <a 
-                href={`http://localhost:5000/${reviewingRequest.documentPath}`} 
+                href={`${API_HOST}/${reviewingRequest.documentPath}`} 
                 target="_blank" 
                 rel="noopener noreferrer"
               >
@@ -257,7 +259,7 @@ const PendingRequests = () => {
                     Preview
                   </button>{' | '}
                   <a 
-                    href={`http://localhost:5000/${request.documentPath}`} 
+                    href={`${API_HOST}/${request.documentPath}`} 
                     target="_blank" 
                     rel="noopener noreferrer"
                   >
