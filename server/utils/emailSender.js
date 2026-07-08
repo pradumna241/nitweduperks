@@ -1,78 +1,48 @@
-// const axios = require('axios');
+const nodemailer = require('nodemailer');
+require('dotenv').config();
 
-// /**
-//  * Send email using SendGrid HTTP API.
-//  * Requires SENDGRID_API_KEY and EMAIL_FROM env vars.
-//  * Falls back to console.log when not configured.
-//  */
-// const sendGridSend = async ({ to, subject, text, html }) => {
-//   const apiKey = process.env.SENDGRID_API_KEY;
-//   const from = process.env.EMAIL_FROM || 'no-reply@example.com';
-
-//   if (!apiKey) {
-//     console.log('SendGrid API key not configured — email content:');
-//     console.log({ to, subject, text, html });
-//     return;
-//   }
-
-//   const payload = {
-//     personalizations: [{ to: [{ email: to }] }],
-//     from: { email: from },
-//     subject,
-//     content: []
-//   };
-
-//   if (html) payload.content.push({ type: 'text/html', value: html });
-//   if (text) payload.content.push({ type: 'text/plain', value: text });
-
-//   await axios.post('https://api.sendgrid.com/v3/mail/send', payload, {
-//     headers: {
-//       Authorization: `Bearer ${apiKey}`,
-//       'Content-Type': 'application/json'
-//     }
-//   });
-// };
-
-// module.exports = { sendGridSend };
+const emailUser = process.env.EMAIL_USER;
+const emailPass = process.env.EMAIL_PASS || process.env.EMAIL_APP_PASSWORD;
+const emailHost = process.env.EMAIL_HOST || 'smtp.gmail.com';
+const emailPort = Number(process.env.EMAIL_PORT || 465);
+const emailSecure = process.env.EMAIL_SECURE !== 'false';
 
 
-const { Resend } = require('resend');
+  console.log(emailUser, emailPass, emailHost, emailPort, emailSecure);
+const transporter = nodemailer.createTransport({
+  host: emailHost,
+  port: emailPort,
+  secure: emailSecure,
+  auth: {
+    user: emailUser,
+    pass: emailPass
+  }
+});
 
 /**
- * Send email using Resend HTTP API.
- * Requires RESEND_API_KEY in the .env file.
+ * Send email using Nodemailer SMTP transport.
+ * Requires EMAIL_USER and EMAIL_PASS (or EMAIL_APP_PASSWORD) in the .env file.
  */
 const sendGridSend = async ({ to, subject, text, html }) => {
-  const apiKey = process.env.RESEND_API_KEY;
+  const from = process.env.EMAIL_FROM || emailUser || 'pradumnaverma2001@gmail.com';
 
-  // Check whether API key exists
-  if (!apiKey) {
-    console.log('Resend API key not configured — email content:');
+  if (!emailUser || !emailPass) {
+    console.log('Email SMTP not configured — email content:');
     console.log({ to, subject, text, html });
     return;
   }
 
-  // Create Resend client
-  const resend = new Resend(apiKey);
+  const mailOptions = {
+    from,
+    to,
+    subject,
+    text,
+    html
+  };
 
-  // Send email
-  const { data, error } = await resend.emails.send({
-    from: 'Student Reward <onboarding@resend.dev>',
-    to: [to],
-    subject: subject,
-    text: text,
-    html: html
-  });
-
-  // Handle Resend error
-  if (error) {
-    console.error('Resend email error:', error);
-    throw new Error(error.message);
-  }
-
-  console.log('Email sent successfully:', data);
-
-  return data;
+  const info = await transporter.sendMail(mailOptions);
+  console.log('Email sent:', info.messageId);
+  return info;
 };
 
 module.exports = { sendGridSend };
